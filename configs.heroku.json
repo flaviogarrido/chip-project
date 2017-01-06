@@ -1,0 +1,9 @@
+{
+	"Server" : "m13.cloudmqtt.com",
+	"User" : "prxrswjm",
+	"Password" : "oXR8VkF2Qreh",
+	"Port" : "14577",
+	"SSL_Port": "24577",
+	"Websockets_Port": "34577",
+	"Connection limit" : 10
+}

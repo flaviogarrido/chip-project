@@ -1,0 +1,31 @@
+{
+    "_id": {
+        "$oid": "586c0d5ffdb5bebc0882a97c"
+    },
+    "status": 40,
+    "dthUserRemoveOrder": {
+        "$date": "2017-01-03T20:45:19.440Z"
+    },
+    "seq": 1,
+    "order": {
+        "vendor": {
+            "name": "E-commerce Test 1",
+            "doc": "11210997000120"
+        },
+        "customer": {
+            "email": "wtvprogrammer@gmail.com",
+            "name": "Willy",
+            "doc": "35062440866"
+        },
+        "code": "code-order-A012392097"
+    },
+    "adress": {
+        "y": "1",
+        "x": 1
+    },
+    "locker": {
+        "id": "5867e56e8345c16234d31594",
+        "doors": 28
+    },
+    "__v": 0
+}

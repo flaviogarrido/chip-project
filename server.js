@@ -9,11 +9,16 @@ app.listen(3000,function(){
 
 
 client.on('connect', function () {
-  client.subscribe('presence')
-  client.publish('presence', 'Hello mqtt')
+  // client.subscribe('presence')
+  client.subscribe('ordersToLocker')
+  // client.publish('presence', 'Hello mqtt')
+  client.publish('ordersToLocker', '1')
+
+  //client.publish('ordersToLocker', JSON.stringify({order:"120371203721"}))
 })
 
 client.on('message', function (topic, message) {
+  console.log('topic - '+topic)
   // message is Buffer
   console.log(message.toString())
   // client.end()
