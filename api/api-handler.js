@@ -27,6 +27,7 @@ class ApiHandler {
       res.writeHead(400, {"Content-Type": "application/json"});
       res.end();
    }
+   
 }
 
 module.exports = ApiHandler;
