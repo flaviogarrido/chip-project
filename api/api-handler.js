@@ -14,6 +14,7 @@ class ApiHandler {
       }
       if ((levels[1] == 'v1') && (levels[2] == 'code')) {
          res.writeHead(200, {"Content-Type": "application/json"});
+         //TODO: handle api request
          res.end(JSON.stringify({"codigo": levels[3]}));
          return;
       } else {
