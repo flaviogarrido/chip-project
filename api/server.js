@@ -50,4 +50,5 @@ setInterval(() => {
     "datetime": new Date(),
     "command": "heartbeat"
   }))
-}, 1000);
+}, 
+60000); // 1 min
