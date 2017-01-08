@@ -1,5 +1,6 @@
 'use strict'
-const interaction = require('./interaction');
+//const interaction = require('./interaction');
+const database = require('./database');
 
 class ApiHandler {
 
@@ -16,12 +17,33 @@ class ApiHandler {
       if ((levels[1] == 'v1') && (levels[2] == 'code')) {
          var order = levels[3];
          var passw = levels[4];
-         var result = interaction.process(order, passw);
-         console.log('Result is ' + JSON.stringify(result));
-         //TODO: handle api request
-         res.writeHead(200, {"Content-Type": "application/json"});
-         res.end(JSON.stringify(result));
-         return;
+ 
+         // var result = interaction.process(order, passw);
+         // console.log('Result is ' + JSON.stringify(result));
+         // //TODO: handle api request
+
+         var result = {
+            code: 0,
+            message: 'Success'
+         };
+         //localizar o registro
+         database.findOne({_id: order }, function(err, doc) {
+            if (err) {
+               result.code = 1;
+               result.message = err;
+            } else if (!doc) {
+               result.code = 2;
+               result.message = 'Invalid order';
+            } else if (doc.pwdToUnlock != passw) {
+               result.code = 3;
+               result.message = 'Invalid password';
+            }
+            //abrir a porta do locker
+            //notificar via mqtt o server
+            //retornar
+            res.writeHead(200, {"Content-Type": "application/json"});
+            res.end(JSON.stringify(result));
+         });
       } else {
          bad_request(res);
          return;
