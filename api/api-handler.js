@@ -1,4 +1,5 @@
 'use strict'
+const interaction = require('./interaction');
 
 class ApiHandler {
 
@@ -13,9 +14,13 @@ class ApiHandler {
          return;
       }
       if ((levels[1] == 'v1') && (levels[2] == 'code')) {
-         res.writeHead(200, {"Content-Type": "application/json"});
+         var order = levels[3];
+         var passw = levels[4];
+         var result = interaction.process(order, passw);
+         console.log('Result is ' + JSON.stringify(result));
          //TODO: handle api request
-         res.end(JSON.stringify({"codigo": levels[3]}));
+         res.writeHead(200, {"Content-Type": "application/json"});
+         res.end(JSON.stringify(result));
          return;
       } else {
          bad_request(res);

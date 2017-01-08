@@ -7,12 +7,34 @@ const staticalserver = require('./statical-server');
 const apihandler = require('./api-handler');
 const mqtthandler = require('./mqtt-handler');
 
-const port = process.argv[2] || 3000;
-const hostname = '127.0.0.1';
+if (process.argv[2]) {
+  if (process.argv[2] == '-h') {
+    console.log('locker - help');
+    console.log('modo de uso:');
+    console.log('  node server [hostname/ip] [port]');
+    return;
+  }
+  if (process.argv[2] == '-config') {
+    console.log('locker.id.............: ' + config.locker.id);
+    console.log('locker.name...........: ' + config.locker.name);
+    console.log('web.hostname..........: ' + config.web.hostname);
+    console.log('web.port..............: ' + config.web.port);
+    console.log('api.version...........: ' + config.api.version);
+    console.log('mqtt.server...........: ' + config.mqtt.server);
+    console.log('mqtt.port.............: ' + config.mqtt.port);
+    console.log('mqtt.username.........: ' + config.mqtt.username);
+    console.log('mqtt.password.........: ' + config.mqtt.password);
+    console.log('mqtt.queue.order......: ' + config.mqtt.queue.order);
+    delete process.argv[2];
+    delete process.argv[3];
+  }
+}
 
 //http server
+const hostname = process.argv[2] || config.web.hostname;
+const port = process.argv[3] || config.web.port;
 const server = http.createServer((req, res) => {
-  if (req.url.startsWith('/v1/')) {
+  if (req.url.startsWith('/'+config.api.version+'/')) {
     var api = new apihandler();
     api.process(req, res);
   } else {
@@ -25,28 +47,31 @@ const server = http.createServer((req, res) => {
 
 //mqtt
 const client = mqtt.connect(
-  'mqtt://m13.cloudmqtt.com:14577', {
-    "username":"prxrswjm", 
-    "password":"oXR8VkF2Qreh"
+  config.mqtt.server + ':' + config.mqtt.port, {
+    "username": config.mqtt.username, 
+    "password": config.mqtt.password
   })
   .on('connect', function () {
-    client.subscribe(config.lockerId);
-    client.subscribe(config.queueorders);
-    client.publish(config.lockerId, JSON.stringify({
-      "lockerId": config.lockerId,
+    console.log('Mqtt connected');
+    client.subscribe(config.locker.id);
+    client.subscribe(config.mqtt.queue.order);
+    client.publish(config.locker.id, JSON.stringify({
+      "lockerId": config.locker.id,
       "process": "api-server",
       "datetime": new Date(),
       "command": "on"
     }));
   }).on('message', function (topic, message) {
+    console.log('Mqtt message recivied');
     var handler = new mqtthandler();
     handler.process(topic, message);
   });
 
 //heartbeat
 setInterval(() => {
-  client.publish(config.lockerId, JSON.stringify({
-    "lockerId": config.lockerId,
+  console.log('Interval to publish heartbeat');
+  client.publish(config.locker.id, JSON.stringify({
+    "lockerId": config.locker.id,
     "process": "api-server",
     "datetime": new Date(),
     "command": "heartbeat"

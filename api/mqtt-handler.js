@@ -8,11 +8,11 @@ class MqttHandler {
 
    process (topic, message) {
       console.log("--------------------------------------------------------------------------------");
-      console.log('topic   - '+topic);
-      console.log('message - '+message);
-      if (topic == config.queueorders) {
+      console.log('topic   - ' + topic);
+      console.log('message - ' + message);
+      if (topic == config.mqtt.queue.order) {
          const obj = JSON.parse(message);
-         if (obj.locker.id == config.lockerId) {
+         if (obj.locker.id == config.locker.id) {
             //delete obj._id;
             database.insert(obj, function(err, doc) {
                if(err) {
@@ -24,8 +24,6 @@ class MqttHandler {
          }
       }
    }
-
-
 }
 
 module.exports = MqttHandler;

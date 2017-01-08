@@ -8,7 +8,7 @@ if (!db) {
         filename: dbName, 
         autoload: true 
     });
-    console.log('Banco ' + dbName + ' pronto para uso')
+    console.log('Local database ' + dbName + ' ready')
 }
 
 module.exports = db;

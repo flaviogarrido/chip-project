@@ -1,6 +1,23 @@
-function press(key) {
-  document.getElementById("codigo").value += key;
+//function for handle virtual keyboard
+function press(id, key) {
+  var field = ["pedido", "codigo"];
+  if (isNaN(key)) {
+    switch (key) {
+      case 'clear':
+        document.getElementById(field[id]).value = '';
+        break;
+      case 'backspace':
+        var text = document.getElementById(field[id]).value;
+        document.getElementById(field[id]).value = 
+          text.substring(0, text.length-1);
+        break;
+    }
+  } else {
+    document.getElementById(field[id]).value += key;
+  }
 }
+
+//function for send ajax request
 function sendCode() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
@@ -9,7 +26,10 @@ function sendCode() {
       this.responseText;
     }
   };
-  xhttp.open("GET", "/v1/code/" +
-    document.getElementById("codigo").value, true);
+  xhttp.open("GET", "/v1/code/" 
+    + document.getElementById("pedido").value
+    + "/"
+    + document.getElementById("codigo").value
+    , true);
   xhttp.send();
 }
