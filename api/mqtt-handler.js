@@ -13,7 +13,7 @@ class MqttHandler {
       if (topic == config.queueorders) {
          const obj = JSON.parse(message);
          if (obj.locker.id == config.lockerId) {
-            delete obj._id;
+            //delete obj._id;
             database.insert(obj, function(err, doc) {
                if(err) {
                   console.log('Error: ' + err);
