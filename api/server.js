@@ -1,14 +1,14 @@
 'use strict'
-
 const http = require('http');
 const url = require('url');
 const mqtt = require('mqtt');
-const apihandler = require('./api-handler');
+const config = require('./config')
 const staticalserver = require('./statical-server');
+const apihandler = require('./api-handler');
+const mqtthandler = require('./mqtt-handler');
 
 const port = process.argv[2] || 3000;
 const hostname = '127.0.0.1';
-const lockerId = 'br-sp-saopaulo-pinheiros-001';
 
 //http server
 const server = http.createServer((req, res) => {
@@ -30,25 +30,30 @@ const client = mqtt.connect(
     "password":"oXR8VkF2Qreh"
   })
   .on('connect', function () {
-    client.subscribe(lockerId);
-    client.publish(lockerId, JSON.stringify({
-      "lockerId": lockerId,
+    client.subscribe(config.lockerId);
+    client.subscribe(config.queueorders);
+    client.publish(config.lockerId, JSON.stringify({
+      "lockerId": config.lockerId,
       "process": "api-server",
       "datetime": new Date(),
       "command": "on"
     }));
   }).on('message', function (topic, message) {
-    console.log('topic - '+topic);
-    console.log(message.toString());
+    var handler = new mqtthandler();
+    handler.process(topic, message);
   });
 
 //heartbeat
 setInterval(() => {
-  client.publish(lockerId, JSON.stringify({
-    "lockerId": lockerId,
+  client.publish(config.lockerId, JSON.stringify({
+    "lockerId": config.lockerId,
     "process": "api-server",
     "datetime": new Date(),
     "command": "heartbeat"
-  }))
+  }), function(err) {
+    if(err) {
+      console.log('heartbeat-publish-error: ' + err);
+    }
+  })
 }, 
 60000); // 1 min
