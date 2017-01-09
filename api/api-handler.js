@@ -1,5 +1,6 @@
 'use strict'
 //const interaction = require('./interaction');
+const exec = require('child_process').exec;
 const database = require('./database');
 
 class ApiHandler {
@@ -39,6 +40,14 @@ class ApiHandler {
                result.message = 'Invalid password';
             }
             //abrir a porta do locker
+            var child = exec('open.sh 0', function(error, stdout, stderr) {
+               console.log('stdout: ' + stdout);
+               console.log('stderr: ' + stderr);
+               if (error != null) {
+                  console.log('exec error: ' + error);
+               }
+            });
+
             //notificar via mqtt o server
             //retornar
             res.writeHead(200, {"Content-Type": "application/json"});
