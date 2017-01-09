@@ -41,7 +41,7 @@ class ApiHandler {
             }
             //abrir a porta do locker
             if (result.code == 0) {
-               var child = exec('open.sh 0', function(error, stdout, stderr) {
+               var child = exec('./open.sh 0', function(error, stdout, stderr) {
                   console.log('stdout: ' + stdout);
                   console.log('stderr: ' + stderr);
                   if (error != null) {
