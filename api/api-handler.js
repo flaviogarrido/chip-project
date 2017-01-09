@@ -40,13 +40,15 @@ class ApiHandler {
                result.message = 'Invalid password';
             }
             //abrir a porta do locker
-            var child = exec('open.sh 0', function(error, stdout, stderr) {
-               console.log('stdout: ' + stdout);
-               console.log('stderr: ' + stderr);
-               if (error != null) {
-                  console.log('exec error: ' + error);
-               }
-            });
+            if (result.code == 0) {
+               var child = exec('open.sh 0', function(error, stdout, stderr) {
+                  console.log('stdout: ' + stdout);
+                  console.log('stderr: ' + stderr);
+                  if (error != null) {
+                     console.log('exec error: ' + error);
+                  }
+               });
+            }
 
             //notificar via mqtt o server
             //retornar
