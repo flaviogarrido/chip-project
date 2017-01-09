@@ -1,6 +1,8 @@
 'use strict'
 //const interaction = require('./interaction');
 const exec = require('child_process').exec;
+const mqtt = require('mqtt');
+const config = require('./config')
 const database = require('./database');
 
 class ApiHandler {
@@ -51,6 +53,24 @@ class ApiHandler {
             }
 
             //notificar via mqtt o server
+            const client = mqtt.connect(
+            config.mqtt.server + ':' + config.mqtt.port, {
+               "username": config.mqtt.username, 
+               "password": config.mqtt.password
+            })
+            .on('connect', function () {
+               console.log('Mqtt connected');
+               client.subscribe(config.mqtt.queue.server);
+               client.publish(config.mqtt.queue.server, JSON.stringify({
+                  "lockerId": config.locker.id,
+                  "process": "api-server",
+                  "datetime": new Date(),
+                  "command": "interaction",
+                  "order" : order
+               }));
+               client.end();
+            });
+
             //retornar
             res.writeHead(200, {"Content-Type": "application/json"});
             res.end(JSON.stringify(result));

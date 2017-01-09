@@ -17,7 +17,8 @@ module.exports =
       "username" : "prxrswjm", 
       "password" : "oXR8VkF2Qreh",
       "queue"    : {
-         "order" : "ordersToLocker"
+         "order" : "ordersToLocker",
+         "server": "eventsInLocker"
       }
    }
 }

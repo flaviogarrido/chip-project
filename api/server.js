@@ -55,6 +55,7 @@ const client = mqtt.connect(
     console.log('Mqtt connected');
     client.subscribe(config.locker.id);
     client.subscribe(config.mqtt.queue.order);
+    client.subscribe(config.mqtt.queue.server);
     client.publish(config.locker.id, JSON.stringify({
       "lockerId": config.locker.id,
       "process": "api-server",
