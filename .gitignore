@@ -39,3 +39,7 @@ jspm_packages
 # Local database
 locker.db
 
+# dotNet
+bin
+obj
+
